@@ -1,6 +1,6 @@
 <?php
     session_start();
-    require("./connection.php");
+    require(__DIR__."/connection.php");
     ini_set('display_errors', '1');
     ini_set('display_startup_errors', '1');
     error_reporting(E_ALL);
@@ -39,20 +39,38 @@
         // recipient must be between 1 - 4 (inclusive)
         // recipient must be a digit
 
-        // TODO: validate and sanitize file input
-        // Assigned to: Group 4 & Group 5
-        
-        // file extension must be: .pdf, .jpeg, .docx, .txt, .xlsx, .csv, .png, .mp3, .mp4, .pptx, .mkv
-        // file size <= 25MB
-        // file size > 0
-        // file name length < 50
-        // file name must not contain path element (./, ../, etc.)
-        
+        // File validation & Sanitization
+        $allowed_extensions = ['pdf', 'jpeg', 'docx', 'txt', 'xlsx', 'csv', 'png', 'mp3', 'mp4', 'pptx', 'mkv'];
+        $max_file_size = 25 * 1024 * 1024; // 25MB
+        $max_filename_length = 50;
 
         $attachment = $_FILES['user_file'];
-
         $fileinfo = pathinfo($attachment['name']);
         $filename = $fileinfo['filename'];
+
+        // Validate file extension
+        if (!in_array(strtolower($fileinfo['extension']), $allowed_extensions)) {
+            echo "ERROR: Invalid file extensions! Must be: " . implode(', ', $allowed_extensions) . ".";
+            exit;
+        }
+
+        // Validate file size
+        if ($attachment['size'] <= 0 || $attachment['size'] > $max_file_size) {
+            echo "ERROR: Invalid file size! Must be 0MB - 25MB.";
+            exit;
+        }
+
+        // Validate file name length
+        if (strlen($filename) > $max_filename_length) {
+            echo "ERROR: File name too long! Must be <= 50 characters.";
+            exit;
+        }
+
+        // Check for path traversal in the file name
+        if (strpos($filename, '/') || strpos($filename, '\\')) {
+            echo "ERROR: Invalid file name! Characters \"\/\" and \"\\\\\" are forbidden.";
+            exit;
+        }
 
         $target_directory = "../storage/";
         $new_file_path = $target_directory . $filename;
@@ -64,14 +82,12 @@
             echo "File upload failed miserably.";
         }
 
-        $query = "insert into communications(title,recipient_id,message,
-        attachment,sender_id) values('$title','$recipient','$message',
-        '$new_file_path','$sender_id')";
+        $query = "insert into communications(title, recipient_id, message, attachment, sender_id)
+                  values('?', '?', '?', '?', '?')";
 
         $result = $db->query($query);
         $db->close();
 
     }
-
 
 ?>
