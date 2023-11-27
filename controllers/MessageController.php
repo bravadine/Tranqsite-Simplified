@@ -82,9 +82,13 @@
             echo "File upload failed miserably.";
         }
 
+        // Use parameterised query
         $query = "insert into communications(title, recipient_id, message, attachment, sender_id)
                   values('?', '?', '?', '?', '?')";
-
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("ssssi", $title, $recipient, $message, $new_file_path, $sender_id);
+        $result = $stmt->execute();
+        $stmt->close();
         $result = $db->query($query);
         $db->close();
 
