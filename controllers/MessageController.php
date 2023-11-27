@@ -21,19 +21,18 @@
         // Title Validation & Sanitisation
         $title = trim($_POST['title']);
         $title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
-
-        if (!checkInputLength($title, 20)) {
-            echo "ERROR: Invalid title! Must be 1 - 19 characters.";
+        if (empty($title) || !strlen($title) >= 20) {
+            echo "ERROR: Invalid title! Must not be empty and <20 characters.";
             exit;
         }
 
-        // TODO: validate and sanitize $message input
-        // Assigned to: Group 2
-
-        // message < 100
-        // message cannot be empty
-        // message > 5 words
-        // message must be robust against xss and html injection. any html tags must be escaped.
+        // Message Validation & Sanitisation
+        $message = trim($_POST['title']);
+        $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+        if (empty($message) || !strlen($message) >= 100 || str_word_count($message) <= 5) {
+            echo "ERROR: Invalid message! Must not be empty, <100 characters, and >5 words.";
+            exit;
+        }
 
         // TODO: sanitize and validate $recipient input
         // Assigned to: Group 3
@@ -65,7 +64,7 @@
 
         // Validate file name length
         if (strlen($filename) > $max_filename_length) {
-            echo "ERROR: File name too long! Must be <= 50 characters.";
+            echo "ERROR: File name too long! Must be <50 characters.";
             exit;
         }
 
