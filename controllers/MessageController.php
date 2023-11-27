@@ -18,11 +18,14 @@
         $message = $_POST['message'];
         $sender_id = $_SESSION['id'];
 
-        // TODO: sanitize and validate $title input 
-        // Assigned to: Group 1
-        // title must not be empty
-        // title < 20 chars
-        // title must be robust against xss and html injection. any html tags must be stripped.
+        // Title Validation & Sanitisation
+        $title = trim($_POST['title']);
+        $title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+
+        if (!checkInputLength($title, 20)) {
+            echo "ERROR: Invalid title! Must be 1 - 19 characters.";
+            exit;
+        }
 
         // TODO: validate and sanitize $message input
         // Assigned to: Group 2
@@ -39,7 +42,7 @@
         // recipient must be between 1 - 4 (inclusive)
         // recipient must be a digit
 
-        // File validation & Sanitization
+        // File validation & Sanitisation
         $allowed_extensions = ['pdf', 'jpeg', 'docx', 'txt', 'xlsx', 'csv', 'png', 'mp3', 'mp4', 'pptx', 'mkv'];
         $max_file_size = 25 * 1024 * 1024; // 25MB
         $max_filename_length = 50;
