@@ -34,14 +34,14 @@
             exit;
         }
 
-        // TODO: sanitize and validate $recipient input
-        // Assigned to: Group 3
+        // Recipient Validation & Sanitisation
+        $recipient = trim($_POST['title']);
+        $recipient = htmlspecialchars($recipient, ENT_QUOTES, 'UTF-8');
+        if (empty($recipient) || !ctype_digit($recipient) || $recipient < 1 || $recipient > 4) {
+            echo "ERROR: Invalid recipient! Must be 1 - 4.";
+        }
 
-        // recipient must not be empty
-        // recipient must be between 1 - 4 (inclusive)
-        // recipient must be a digit
-
-        // File validation & Sanitisation
+        // File Validation & Sanitisation
         $allowed_extensions = ['pdf', 'jpeg', 'docx', 'txt', 'xlsx', 'csv', 'png', 'mp3', 'mp4', 'pptx', 'mkv'];
         $max_file_size = 25 * 1024 * 1024; // 25MB
         $max_filename_length = 50;
