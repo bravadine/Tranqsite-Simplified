@@ -6,5 +6,5 @@ function generateCSRF() {
 }
 
 function verifyCSRF() {
-    return $_SESSION['csrf_token'] && hash_equals($_SESSION['csrf_token'], $_POST['csrf_token']);
+    return isset($_POST['csrf_token']) && hash_equals($_SESSION['csrf_token'], $_POST['csrf_token']);
 }
