@@ -1,16 +1,10 @@
 <?php
+session_start();
 
 function generateCSRF() {
-    $csrf = isset($_SESSION['csrf_token']) ? $_SESSION['csrf_token'] : "";
-    if (!$csrf) {
-        $csrf = sha1(openssl_random_pseudo_bytes(16));
-        $_SESSION['csrf_token'] = $csrf;
-    }
+    $_SESSION['csrf_token'] = $_SESSION['csrf_token'] ?? sha1(openssl_random_pseudo_bytes(20));
 }
 
-function verifyCSRF($csrf) {
-    if (isset($_SESSION['csrf_token'])) {
-        return hash_equals($_SESSION['csrf_token'], $csrf);
-    }
-    return false;
+function verifyCSRF() {
+    return $_SESSION['csrf_token'] && hash_equals($_SESSION['csrf_token'], $_POST['csrf_token']);
 }
