@@ -1,4 +1,4 @@
-version: 3.4
+version: "3.4"
 volumes:
   dbdata:
 services:
@@ -12,7 +12,7 @@ services:
     volumes:
       - .:/var/www/html:Z
     ports:
-      - 8000:80
+      - "8000:80"
   database:
     container_name: tranqsite-db
     image: mysql
@@ -22,14 +22,14 @@ services:
       MYSQL_DATABASE: "tranqsite"
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     ports:
-      - 3306:3306
+      - "3306:3306"
     volumes:
       - dbdata:/var/lib/mysql
   phpmyadmin:
      container_name: tranqsite-pma
      image: phpmyadmin/phpmyadmin
      ports:
-       - 8080:80
+       - "8080:80"
      restart: always
      environment:
        PMA_HOST: database
