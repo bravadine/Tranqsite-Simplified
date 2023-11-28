@@ -9,7 +9,7 @@
         $username = $_POST['username'];
         $password = $_POST['password'];
 
-        $query = "SELECT * FROM users WHERE username=? AND password=?;";
+        $query = "SELECT * FROM users WHERE username = ? AND password = ?";
         $stmt = $db->prepare($query);
         $stmt->bind_param("ss", $username, $password);
         // s -> string
